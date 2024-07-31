@@ -1,0 +1,1225 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Are We IoT Yet?</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">Are We IoT Yet?</a></li><li class="chapter-item expanded "><a href="introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="introduction/bluetooth.html"><strong aria-hidden="true">1.1.</strong> Bluetooth Stack Comparison</a></li><li class="chapter-item expanded "><a href="introduction/hardware.html"><strong aria-hidden="true">1.2.</strong> Hardware</a></li><li class="chapter-item expanded "><a href="introduction/renode.html"><strong aria-hidden="true">1.3.</strong> Renode</a></li><li class="chapter-item expanded "><a href="introduction/quickstart.html"><strong aria-hidden="true">1.4.</strong> Quickstart</a></li></ol></li><li class="chapter-item expanded "><a href="riot/index.html"><strong aria-hidden="true">2.</strong> RIOT</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="riot/examples.html"><strong aria-hidden="true">2.1.</strong> Examples</a></li><li class="chapter-item expanded "><a href="riot/build.html"><strong aria-hidden="true">2.2.</strong> Build & Run Instructions</a></li></ol></li><li class="chapter-item expanded "><a href="tock/index.html"><strong aria-hidden="true">3.</strong> Tock</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="tock/examples.html"><strong aria-hidden="true">3.1.</strong> Examples</a></li><li class="chapter-item expanded "><a href="tock/build.html"><strong aria-hidden="true">3.2.</strong> Build & Run Instructions</a></li></ol></li><li class="chapter-item expanded "><a href="embassy/index.html"><strong aria-hidden="true">4.</strong> Embassy</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="embassy/examples.html"><strong aria-hidden="true">4.1.</strong> Examples</a></li><li class="chapter-item expanded "><a href="embassy/board.html"><strong aria-hidden="true">4.2.</strong> Build & Run Instruction for Board</a></li><li class="chapter-item expanded "><a href="embassy/renode.html"><strong aria-hidden="true">4.3.</strong> Remarks regarding Renode</a></li></ol></li><li class="chapter-item expanded "><a href="drogueiot/index.html"><strong aria-hidden="true">5.</strong> Drogue IoT</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="drogueiot/examples.html"><strong aria-hidden="true">5.1.</strong> Examples</a></li></ol></li><li class="chapter-item expanded "><a href="zephyr/index.html"><strong aria-hidden="true">6.</strong> Zephyr</a></li><li class="chapter-item expanded "><a href="os.html"><strong aria-hidden="true">7.</strong> Other Operation Systems</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Are We IoT Yet?</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="are-we-iot-yet"><a class="header" href="#are-we-iot-yet">Are We IoT Yet?</a></h1>
+<p><em>The state of the Internet of Things in Rust.</em></p>
+<p>With a focus on Bluetooth Low Energy (BLE), pure Rust programming, and simulation support on edge-devices, we are <strong>not</strong> IoT yet.</p>
+<h2 id="status"><a class="header" href="#status">Status</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>OS</th><th>Language</th><th>BLE Support</th><th>Application Rust Support</th><th>Renode Support</th></tr></thead><tbody>
+<tr><td><a href="riot">RIOT</a></td><td>C</td><td>😄</td><td>🙂</td><td>😄</td></tr>
+<tr><td><a href="tock">tock</a></td><td>Rust</td><td>😐</td><td>🙂</td><td>😄</td></tr>
+<tr><td><a href="embassy">Embassy</a></td><td>Rust</td><td>😄</td><td>😄</td><td>☹️</td></tr>
+<tr><td><a href="drogueiot">Drogue IoT</a></td><td>Rust</td><td>😄</td><td>😄</td><td>☹️</td></tr>
+<tr><td><a href="zephyr">Zephyr</a></td><td>C</td><td>😄</td><td>☹️</td><td>😄</td></tr>
+</tbody></table>
+</div>
+<h2 id="trade-offs"><a class="header" href="#trade-offs">Trade-offs</a></h2>
+<ul>
+<li>BLE and pure Rust programming are achievable using <a href="embassy">Embassy</a> and <a href="drogueiot">DrogueIOT</a> but simulation support is missing.</li>
+<li>BLE and simulation support using <a href="renode">Renode</a> while programming mainly in Rust is achievable with <a href="riot">RIOT</a> but requires proficiency in C.</li>
+<li>Pure Rust programming and simulation support using <a href="renode">Renode</a> work with <a href="tock">tock</a> but only provide very limited BLE support.</li>
+</ul>
+<h2 id="open-tasks"><a class="header" href="#open-tasks">Open Tasks</a></h2>
+<p>We identified the following open tasks that would help make Rust IoT-ready:</p>
+<ul>
+<li><a href="embassy/renode">Add Renode support for Embassy and Drogue IoT</a></li>
+<li><a href="https://github.com/RIOT-OS/rust-riot-wrappers">Improve the RIOT rust wrappers and add support for NimBLE</a></li>
+<li><a href="https://github.com/tylerwhall/zephyr-rust">Have more complete and maintained Zephyr Rust support</a></li>
+<li><a href="https://github.com/tock/tock">Build a full Bluetooth stack for tock</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<h2 id="motivation"><a class="header" href="#motivation">Motivation</a></h2>
+<p>Rust is a programming language to build memory-safe, reliable, and stable software without race-conditions which is great for IoT applications. Thus, we want to check the state of IoT development using Rust. There is an ongoing demand from developers to use Rust as an alternative to C as it is an interesting and promising language with a lot of active development and research. As a promising alternative to C, it would also make embedded and IoT development easily accessible. So, we answer the question "<strong>Are We IoT Yet?</strong>". Therefore, we used two subquestions to be answered on our way:</p>
+<ol>
+<li>Is there a well-documented operating system maintaining IoT development using Rust?</li>
+<li>Is it possible to deeply test the implementations safely in a simulator?</li>
+</ol>
+<h2 id="iot-vs-embedded"><a class="header" href="#iot-vs-embedded">IoT vs. Embedded</a></h2>
+<p>The Internet of Things (IoT) is a network of embedded devices communicating with each other. So, the big difference between embedded devices and IoT devices is the communication done with IoT devices. IoT devices are connected which is typically done via some wireless link. As Bluetooth Low Energy (BLE) is common these days not only in IoT devices but also in everyday devices, multiple development boards, and frameworks, we focused on wireless communication using BLE as it is widely spread. Additionally, BLE is designed for smart devices, so it is efficient and low-energy-consuming.</p>
+<p>The state of <a href="https://www.rust-lang.org/what/embedded">Embedded</a> and <a href="https://arewertosyet.com">RTOS</a> in Rust is already covered. Although RTOS is not that well supported in the tested frameworks, we pushed for IoT development as at least embedded development in Rust has <a href="https://github.com/rust-embedded/wg">official support</a>. Because IoT development does not necessarily have a hard real-time requirement, some of the operating systems of the <a href="https://github.com/rust-embedded/awesome-embedded-rust">embedded Rust list</a> looked promising although they did not meet the standards for an RTOS.</p>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<p>To be able to answer the subquestion on the safe test environment, we choose <a href="introduction/renode.html">Renode</a> as a simulator to run our implementations before flashing them to the actual hardware. Renode is a scalable simulation framework, especially for IoT devices. It is Open Source, fully deterministic, and stands out due to its continuous integration. Additionally, Renode can be used on most operating systems.</p>
+<p>For the hardware side, we choose Nordic Semiconductors nRF52840dk board as it is quite common, widely used in research and industry, and thus is well supported for multiple frameworks. It is relevant that we used this exact board as we didn't just go for our chip being supported but also for the peripherals of the board. Additionally, Renode supports simulating these boards which is great for transparent and robust debugging before flashing on the boards. It is also useful if one does not have a board (yet) and already wants to start implementing and debugging.</p>
+<h2 id="expectations"><a class="header" href="#expectations">Expectations</a></h2>
+<p>We expect Renode to behave the same as the boards when given the same code. Additionally, we expect BLE communication implementable using Rust without writing C code as we want new developers to only focus on programming Rust. The implementations should run stable. Additionally, we would expect maintained Rust support for the operating systems as otherwise, they most likely will not have any future value to the industry. Furthermore, we like the BLE stack of each operating system to be feature-rich, meaning more than a minimal implementation is required as most applications will need connectivity of the devices.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="bluetooth-stack-comparison"><a class="header" href="#bluetooth-stack-comparison">Bluetooth Stack Comparison</a></h1>
+<p>We compare five operating systems and their Bluetooth stacks on eleven characteristics. The intention is to enable a feeling of what the different operating systems are capable of. Afterward, we give a short summary of the different stacks used.</p>
+<style>
+@media print {
+   .noprint {
+      visibility: hidden;
+   }
+}
+</style>
+<!-- Checkboxes to toggle the visibility of the columns of the table -->
+<fieldset id="Checkboxes" class="noprint">
+  <legend>Choose the OS's to be compared </legend>
+  <div>
+    <input type="checkbox" id="embassy" name="interest" value="embassy"checked/>
+    <label for="embassy">Embassy</label>
+  </div>
+  <div>
+    <input type="checkbox" id="drogue" name="interest" value="drogue" checked/>
+    <label for="drogue">Drogue OS</label>
+  </div>
+  <div>
+    <input type="checkbox" id="tock" name="interest" value="tock" checked/>
+    <label for="tock">tock</label>
+  </div>
+  <div>
+    <input type="checkbox" id="riot" name="interest" value="riot" checked/>
+    <label for="riot">RIOT</label>
+  </div>
+  <div>
+    <input type="checkbox" id="zephyr" name="interest" value="zephyr" checked/>
+    <label for="zephyr">Zephyr</label>
+  </div>
+</fieldset>
+<!-- The actual table -->
+<table text-align="left" style="width: 100%;">
+<!-- Assigning ids to each column to be able to collapse them with javascript later -->
+<colgroup>
+    <col span = "1">
+    <col id="em_tab" span="1" style=visibility:visible>
+    <col id="dr_tab" span="1" style=visibility:visible>
+    <col id="to_tab" span="1" style=visibility:visible>
+    <col id="ri_tab" span="1" style=visibility:visible>
+    <col id="ze_tab" span="1" style=visibility:visible>
+  </colgroup>
+<!-- Content of the table -->
+<tr>
+<th></th>
+<th>Embassy</th>
+<th>Drogue OS</th>
+<th>tock</th>
+<th>RIOT</th>
+<th>Zephyr</th>
+</tr>
+<tr>
+<td>Bluetooth Stack</td>
+<td>SoftDevice</td>
+<td>SoftDevice</td>
+<td>tock Stack</td>
+<td>NimBLE</td>
+<td>Zephyr Stack</td>
+</tr>
+<tr>
+<td>Number of concurrent links</td>
+<td>20</td>
+<td>20</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td>32</td>
+<td>unlimited</td>
+</tr>
+<tr>
+<td>Advertising (Broadcaster)</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>Connecting (central)</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>Scanning (observer)</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>Connectable (peripheral)</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>Over-air device firmware updates</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+</tr>
+<tr>
+<td>Asynchronous, event-driven behaviour</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+</tr>
+<tr>
+<td>Implemented in Rust</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+</tr>
+<tr>
+<td>Implemented in C</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>Bluetooth Mesh</td>
+<td>Maybe</td>
+<td>Maybe</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+<tr>
+<td>L2CAP Connections</td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+<td><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></td>
+</tr>
+</table>  
+<p>Some of the operating systems use the same underlying Bluetooth stack. Thus we only have four different Bluetooth stacks:</p>
+<ol>
+<li>SoftDevice</li>
+<li>NimBLE</li>
+<li>Zephyr Stack</li>
+<li>tock Stack</li>
+</ol>
+<h3 id="softdevice"><a class="header" href="#softdevice">SoftDevice</a></h3>
+<p>The <a href="https://infocenter.nordicsemi.com/index.jsp?topic=%2Fsds_s140%2FSDS%2Fs1xx%2Fble_protocol_stack%2Fble_protocol_stack.html">SoftDevice</a> includes a BLE protocol stack that is compliant with Bluetooth 5.1 (Host &amp; Controller). It is built and provided by Nordic Semiconductor, the  producer of the nRF52840 DK board we targeted. Thus, it provides the full support those boards are capable of. Sadly, it is not Open Source and written in C. So the usage of this stack makes it impossible to build an application purely based on Rust. But, it clearly enables the best usage of the hardware.</p>
+<h3 id="nimble"><a class="header" href="#nimble">NimBLE</a></h3>
+<p><a href="https://github.com/apache/mynewt-nimble">Apache NimBLE</a> is a Bluetooth 5.4 compliant Bluetooth stack. It is part of the Apache Mynewt project which "is an open source operating system for tiny embedded devices" (<a href="https://github.com/apache/mynewt-core">Apache Mynewt</a>). NimBLE approaches to replace the SoftDevice and thus supports multiple Nordics chipsets. It is also written in C but it is open source which might make it favorable over Nordics SoftDevice.</p>
+<h3 id="zephyr-stack"><a class="header" href="#zephyr-stack">Zephyr Stack</a></h3>
+<p>The <a href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/overview.html">Zephyrs Bluetooth Stack</a> is Bluetooth 5.3 compliant. It is part of the zephyrproject or the Zephyr RTOS which is open source and programmed in C. While the stack overall is fine, bringing it together with Rust is a hassle as described later in <a href="introduction/../zephyr/README.html">Zephyr</a>.</p>
+<h3 id="tock-stack"><a class="header" href="#tock-stack">tock Stack</a></h3>
+<p>The <a href="https://github.com/tock/tock/blob/master/doc/BluetoothLEStack.md">tock Bluetooth Stack</a> is part of <a href="https://github.com/tock/tock">tock</a>, a secure open source operating system for embedded devices which is completely written in Rust. Sadly, the tock Bluetooth Stack is still quite minimal, which results in not being able to connect. This limits the capability of this stack to advertising and scanning.</p>
+<!-- Javascript part to toggle the visibility of the columns -->
+<!-- Yes, iterating through the checkboxes would have been more beautiful -->
+<!-- Yes, iterating through the columns would also have been more beautiful -->
+<script>
+    const embassy = document.querySelector('#embassy');
+    embassy.addEventListener("change", updateDisplay);
+    const drogue = document.querySelector('#drogue');
+    drogue.addEventListener("change", updateDisplay);
+    const tock = document.querySelector('#tock');
+    tock.addEventListener("change", updateDisplay);
+    const riot = document.querySelector('#riot');
+    riot.addEventListener("change", updateDisplay);
+    const zephyr = document.querySelector('#zephyr');
+    zephyr.addEventListener("change", updateDisplay);
+
+    function updateDisplay() {
+        var em_link = document.getElementById('em_tab');
+        if (!embassy.checked) {
+            em_link.style.visibility = 'collapse';
+        } else {
+            em_link.style.visibility = 'visible';
+        }
+
+        var dr_link = document.getElementById('dr_tab');
+        if (!drogue.checked) {
+            dr_link.style.visibility = 'collapse';
+        } else {
+            dr_link.style.visibility = 'visible';
+        }
+
+        var to_link = document.getElementById('to_tab');
+        if (!tock.checked) {
+            to_link.style.visibility = 'collapse';
+        } else {
+            to_link.style.visibility = 'visible';
+        }
+
+        var ri_link = document.getElementById('ri_tab');
+        if (!riot.checked) {
+            ri_link.style.visibility = 'collapse';
+        } else {
+            ri_link.style.visibility = 'visible';
+        }
+
+        var ze_link = document.getElementById('ze_tab');
+        if (!zephyr.checked) {
+            ze_link.style.visibility = 'collapse';
+        } else {
+            ze_link.style.visibility = 'visible';
+        }
+    }
+</script>    <div style="break-before: page; page-break-before: always;"></div><h1 id="hardware"><a class="header" href="#hardware">Hardware</a></h1>
+<p><img src="introduction/hardware.jpg" alt="" /></p>
+<p>We work with the <a href="https://www.nordicsemi.com/Products/Development-hardware/nrf52840-dk">nRF52840 DK</a> a development board for the <a href="https://www.nordicsemi.com/products/nrf52840">nRF52840 SoC</a> which is a wide-spread readily available BLE capable chip that is supported in all of the mature frameworks we looked over.
+In particular all evaluated frameworks specifically support the nRF52840 DK board and pin layout specifically as well.
+With a few exceptions the nRF52 row of chips was also supported in the newer frameworks which didn't end up in this list for various reasons (see <a href="introduction/../os">here</a> for a list of them).
+<a href="introduction/renode">Renode</a>, the simulation framework we wanted to use for testing also has nRF52840 support and BLE examples with Zephyr.</p>
+<h2 id="working-in-wsl2"><a class="header" href="#working-in-wsl2">Working in WSL2</a></h2>
+<p>When working on Windows through WSL there are two ways to flash the device.</p>
+<p>The first method is to follow the <a href="https://wiki.segger.com/WSL">segger wiki</a> which means running the  J-Link Remote Server on the Windows side and the J-Link Commander on the WSL side.
+Now you can interact and flash the device over the LAN from WSL to Windows.</p>
+<p>This has some problems with some of the toolchains listed in the OS section because they do not expect this causing them to either not find the device or prompt reentering the connection IP multiple times per command.</p>
+<p>Alternatively, there is <a href="https://github.com/dorssel/usbipd-win/wiki/WSL-support">usbipd-win</a> which you install on your Windows and WSL machine.
+This allows you to forward the USB connection to the device directly into the WSL machine.
+For this, you first list all the devices connected to your Windows machine <code>usbipd wsl list</code> and then attach the SEGGER programmer to the WSL machine <code>usbipd wsl attach --busid &lt;deviceID&gt;</code>.
+Note that some commands restart the device or cut the connection and reattaching is required.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="renode"><a class="header" href="#renode">Renode</a></h1>
+<p><a href="https://renode.io/">Renode</a> is an open source software development framework that lets you debug and test multi-node device systems.
+Through it, we can deterministically simulate scenarios and debug them before or in addition to testing on real devices.
+This generally makes it faster and easier to develop and verify behavior.
+Compared to directly emulating the processor and testing using that (e.g. directly using <a href="https://www.qemu.org/">qemu</a>) Renode has abstraction for specific board features and peripherals and has a plugin system to add components or modify their behavior.</p>
+<p>For general information, the <a href="https://renode.readthedocs.io/en/latest/">Renode Documentation</a> is very helpful, but as a starting point a bit confusing.
+For reference on how peripherals are implemented the <a href="https://github.com/renode/renode-infrastructure/tree/master/src/Emulator/Peripherals/Peripherals">Source Code</a> provides a good reference.</p>
+<h2 id="installation"><a class="header" href="#installation">Installation</a></h2>
+<p>To install Renode you just need to download the appropriate <a href="https://github.com/renode/renode/releases/latest">release</a> for your operation system and install it.
+For Windows this is the <code>.msi</code> installer, for macOS the <code>.dmg</code> disk image, for Debian/Ubuntu this is the <code>.deb</code> software package.</p>
+<p>After installation, you might want to make sure that the installed program's <code>bin</code> folder is part of your PATH variable so you can access the <code>Renode</code> binary everywhere.</p>
+<p>Optionally install <a href="https://www.wireshark.org/download.html">Wireshark</a> for logging Bluetooth Low Energy Traffic.</p>
+<h2 id="installed-platforms"><a class="header" href="#installed-platforms">Installed Platforms</a></h2>
+<p>Inside your <code>Renode/platforms/cpus</code> folder the configurations for different CPUs are listed and the <code>Renode/platforms/boards</code> folder contains a list of all supported boards.
+These files act as a good reference when you need to adjust your board configuration to add or modify peripherals.
+The <code>Renode/scripts</code> folder contains a collection of different simulations to try out and see how they are implemented.</p>
+<h2 id="running-a-simulation"><a class="header" href="#running-a-simulation">Running a Simulation</a></h2>
+<p>For our specific use case where we already decided on the nRF52840 DK board and know we want to either run single-node or multi-node Bluetooth Low Energy simulations, building our scenario is fairly simple:</p>
+<p>Here is a fully commented version of the <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/tock_advertise.resc">tock BLE advertise example</a>, which is oriented on the official <a href="https://renode.readthedocs.io/en/latest/tutorials/ble-simulation.html#bluetooth-low-energy-simulation-in-renode">BLE Tutorial</a>:</p>
+<pre><code># The system bus is the core peripheral that is always defined
+using sysbus
+
+# Setup a wireless medium
+# https://renode.readthedocs.io/en/latest/networking/wireless.html
+emulation CreateBLEMedium "wireless"
+
+# Create another node
+mach create
+
+# Load the CPU/Board description from the "nrf52840-tock.repl" file into the current node
+machine LoadPlatformDescription @nrf52840-tock.repl
+
+# Connect the current node to the BLE network
+connector Connect sysbus.radio wireless
+
+# Set the variable $bin if not set already to the path of "output/ble_advertising.elf"
+$bin?=@output/ble_advertising.elf
+
+# Create another window that outputs and interacts with uart0 (defined in the Platform Description)
+showAnalyzer uart0
+
+# Control what is logged, in this case NOISY/everything
+# https://renode.readthedocs.io/en/latest/basic/logger.html
+logLevel -1
+
+# Define some time scale, this is not explained in detail but is necessary 
+emulation SetGlobalQuantum "0.00001"
+
+# Optionally logging of BLE Traffic with Wireshark
+# https://renode.readthedocs.io/en/latest/networking/wireshark.html
+emulation LogBLETraffic
+
+# This macro method seems to be the preferred method to script the reset
+# In this case it is just loading the binary ELF file on the one node
+macro reset
+"""
+    sysbus LoadELF $bin
+"""
+runMacro $reset
+</code></pre>
+<p>Notable here is that for setting up BLE we need to create the medium, connect our node to it, and set up some emulation time scale which is not really explained anywhere in detail.</p>
+<p>Interesting is the <code>emulation LogBLETraffic</code> feature which if <a href="https://www.wireshark.org/">Wireshark</a> is installed will open it and log the BLE traffic.</p>
+<p>To run this simulation we now only need to start Renode, then in the Renode console load the script with the command <code>include @tock_advertise.resc</code> and start the simulation with the command <code>start</code>.
+This can be done in one command from the command line as well as <code>renode -e "include @tock_advertise.resc;start"</code></p>
+<h2 id="running-multi-node-simulations"><a class="header" href="#running-multi-node-simulations">Running multi-node simulations</a></h2>
+<p>Here is a fully commented version of the <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/tockos_demo.resc">tock BLE scanning example</a>:</p>
+<pre><code># The system bus is the core peripheral that is always defined
+using sysbus
+
+# Set variables for the binary paths for the advertiser and scanner 
+$adv_bin?=@output/ble_advertising.elf
+$scan_bin?=@output/ble_passive_scanning.elf
+
+# Setup a wireless medium
+# https://renode.readthedocs.io/en/latest/networking/wireless.html
+emulation CreateBLEMedium "wireless"
+
+
+# Create the Advertiser Node under the name "adv"
+mach create "adv"
+
+# Load the CPU/Board description from the "nrf52840-tock.repl" file into the "adv" node
+machine LoadPlatformDescription @nrf52840-tock.repl
+
+# Connect the "adv" node to the BLE network
+connector Connect sysbus.radio wireless
+
+# Spawn a window for interacting with the uart0 interface of the "adv" node
+showAnalyzer uart0
+
+
+# Create the Scanner Node under the name "scan"
+mach create "scan"
+
+# Load the CPU/Board description from the "nrf52840-tock.repl" file into the "scan" node
+machine LoadPlatformDescription @nrf52840-tock.repl
+
+# Connect the "scan" node to the BLE network
+connector Connect sysbus.radio wireless
+
+# Spawn a window for interacting with the uart0 interface of the "scan" node
+showAnalyzer uart0 
+
+# Define some time scale, this is not explained in detail but is necessary 
+emulation SetGlobalQuantum "0.00001"
+
+# Optionally logging of BLE Traffic with Wireshark
+# https://renode.readthedocs.io/en/latest/networking/wireshark.html
+emulation LogBLETraffic
+
+# On reset:
+# Load the advertiser binary into the "adv" node
+# Load the scanner binary into the "scan" node
+macro reset
+"""
+    mach set "adv"
+    sysbus LoadELF $adv_bin
+
+    mach set "scan"
+    sysbus LoadELF $scan_bin 
+"""
+runMacro $reset
+</code></pre>
+<p>Again to run this scenario we can include the scenario and start, or just run <code>renode -e "include @tock_demo.resc;start"</code>.</p>
+<p>To add more nodes we need to make that we create the machine, load a description, and connect it to the BLE network:</p>
+<pre><code>mach create "name"
+machine LoadPlatformDescription @nrf52840-tock.repl
+connector Connect sysbus.radio wireless
+
+# If we want UART console input/output
+showAnalyzer uart0 
+</code></pre>
+<p>In the reset macro we need to add the commands to load the appropriate programs into them:</p>
+<pre><code>    mach set "name"
+    sysbus LoadELF @path/to/binary
+</code></pre>
+<h2 id="extendability"><a class="header" href="#extendability">Extendability</a></h2>
+<p>For both <a href="introduction/../tock">tock</a> and <a href="introduction/../riot">RIOT</a>, we ran into issues where the stock CPU configuration for the nRF52840 was not enough to properly simulate programs.
+For tock, this meant <a href="introduction/../tock/build.html#notes-on-renode">adding additional registers</a> which is possible by just modifying the platform description and adding them.
+See the <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/tock_demo.resc">tock scenarios</a> as an example of this.</p>
+<p>For RIOT, the problem was the underlying <a href="introduction/../riot/build.html#notes-on-renode">UART implementation</a> for the nRF52840, but this also is not a problem because Renode lets you load in your own peripherals as C# files.
+Then at the start of your scenario file you load these custom C# peripherals in just like a scenario script with <code>include @NRF52840_UART_MODIFIED.cs</code> which you can then reference in e.g. your platform description file.
+See the <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/riot/riot_advertise.resc">RIOT scenarios</a> as an example of this.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="quickstart-guide"><a class="header" href="#quickstart-guide">Quickstart Guide</a></h1>
+<p>We provide examples, Dockerfiles, and Renode scenario files for <a href="introduction/../tock">tock</a> and <a href="introduction/../riot">RIOT</a> in the <a href="https://github.com/Pusty/AreWeIoTYet">repository</a>.
+These files act both as a demonstration of how Rust development for these frameworks looks like and as an entry-point to trying it out.</p>
+<h2 id="setup-1"><a class="header" href="#setup-1">Setup</a></h2>
+<p>To build the examples only <a href="https://docs.docker.com/engine/install/">Docker</a> needs to be installed.</p>
+<ul>
+<li>Clone the repository: <code>git clone https://github.com/Pusty/AreWeIoTYet</code></li>
+<li>Build tock: <code>cd tock;docker build --output=output --target=binaries .;cd ..</code></li>
+<li>Build RIOT: <code>cd riot;docker build --output=output --target=binaries .;cd ..</code></li>
+</ul>
+<p>To run the scenarios <a href="introduction/introduction/renode">Renode</a> and <a href="https://www.wireshark.org/download.html">Wireshark</a> need to be installed.</p>
+<ul>
+<li>
+<p>Run the RIOT advertiser example: <code>cd riot;renode -e "include @riot_advertise.resc;start"</code></p>
+</li>
+<li>
+<p>Run a RIOT demonstration of advertiser and scanner: <code>cd riot;renode -e "include @riot_demo.resc;start"</code></p>
+</li>
+<li>
+<p>Run the tock advertiser example: <code>cd tock;renode -e "include @tock_advertise.resc;start"</code></p>
+</li>
+<li>
+<p>Run a tock demonstration of advertiser and scanner: <code>cd tock;renode -e "include @tock_demo.resc;start"</code></p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="riot"><a class="header" href="#riot">RIOT</a></h1>
+<p>RIOT is a real-time multi-threading operating system written in C.
+It has support for a large variety of devices, peripherals, and protocols.
+For us most notably it explicitly supports the <code>nrf52840dk</code> board and BLE through a port of the <a href="https://mynewt.apache.org/latest/network/">Apache Mynewt NimBLE</a> stack.</p>
+<h2 id="-bluetooth-status"><a class="header" href="#-bluetooth-status">[😄] Bluetooth Status</a></h2>
+<p>NimBLE is fully compliant with the Bluetooth 5.4 specifications with support for Bluetooth Mesh.
+Also notably there exists <a href="https://cwiki.apache.org/confluence/display/MYNEWT/RN-NimBLE-1.1.0">official certification</a> for the version 1.1.0 of NimBLE that is Bluetooth 5.0 compliant.</p>
+<h2 id="-rust-status"><a class="header" href="#-rust-status">[🙂] Rust Status</a></h2>
+<p>RIOT has official Rust support and <a href="https://doc.riot-os.org/using-rust.html">proper instructions on how to use it</a>.
+Generally, it works by running <code>C2Rust</code> and generating Rust bindings for the C code automatically.
+In addition, there are provided <a href="https://github.com/RIOT-OS/rust-riot-wrappers">wrappers</a> that provide more proper methods of interacting with some components.
+At the time of writing, there are no provided wrappers for using the NimBLE stack, so BLE interaction is done in <code>unsafe {}</code> blocks using the Rust to C bindings.</p>
+<p>By default, there is only a <code>rust-hello-world</code> and <code>rust-gcoap</code> example. We additionally provide a <a href="riot/examples.html#ble-advertising"><code>rust-ble-advertising</code></a> and <a href="riot/examples.html#ble-scanning"><code>rust-ble-scanning</code></a> example.</p>
+<h2 id="-renode-status"><a class="header" href="#-renode-status">[😄] Renode Status</a></h2>
+<p>RIOT works in Renode <a href="riot/build.html#notes-on-renode">with a modified UART driver</a> that accounts for the way RIOT implemented their serial output.
+Thanks to the architecture of Renode, this modified UART driver can be provided externally.</p>
+<p>Provided are <a href="riot/build.html#build-with-docker">Dockerfiles for building</a> the examples and directly <a href="riot/build.html#run-on-renode">running them in renode</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examples"><a class="header" href="#examples">Examples</a></h1>
+<p>RIOT provides a few <a href="https://github.com/RIOT-OS/RIOT/tree/master/examples">examples</a> for Bluetooth Low Energy using both their Nimble and Skald drivers, but they are written in C.
+There are also a few <a href="https://github.com/RIOT-OS/RIOT/tree/master/examples/rust-hello-world">Rust examples</a>.</p>
+<p>RIOT's <a href="https://doc.riot-os.org/using-rust.html">system for using Rust</a> is pretty decent but the <a href="https://github.com/RIOT-OS/rust-riot-wrappers">Wrapper Library</a> is as of writing this still lacking in quite a lot of aspects, especially when it comes to BLE.
+This leads to us having to write wrapper code for the C interface ourselves by mirroring C structures and a lot of <code>unsafe</code> sections.</p>
+<h2 id="ble-advertising"><a class="header" href="#ble-advertising">BLE Advertising</a></h2>
+<p>The <a href="https://github.com/Pusty/AreWeIoTYet/tree/main/riot/examples/rust-nimble_advertiser">Rust BLE Advertising Example</a> uses Nimble to send advertisements.</p>
+<p>This is what it looks like in renode:</p>
+<p><img src="riot/advertise.png" alt="" /></p>
+<p>And this is how the advertisement packets that are sent are structured:</p>
+<p><img src="riot/packet.png" alt="" /></p>
+<h2 id="ble-scanning"><a class="header" href="#ble-scanning">BLE Scanning</a></h2>
+<p>The <a href="https://github.com/Pusty/AreWeIoTYet/tree/main/riot/examples/rust-nimble_scanner">Rust BLE Scanning Example</a> registers a <code>scan</code> command and when it is entered either with or without a timeout argument it waits that long and prints out the received advertisements.</p>
+<p>When running the <a href="riot/build.html#riot_demo"><code>riot_demo</code></a> this is what the scanner receives:</p>
+<p><img src="riot/receive.png" alt="" /></p>
+<p>Here the received arrays are the packets send by the advertiser in raw byte format.
+Note here "70 6F 74 61 74 6F" which is the device name of the advertiser.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="build--run-instructions"><a class="header" href="#build--run-instructions">Build &amp; Run Instructions</a></h1>
+<p>For the Rust components we first need <a href="https://rustup.rs/"><code>rustup</code></a>:</p>
+<ul>
+<li><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></li>
+</ul>
+<p>For building the <code>c2rust</code> bindings we need a few more dependencies, mainly a <code>LLVM</code> toolchain:</p>
+<pre><code># ubuntu:22.04
+
+apt-get install cmake pkg-config
+
+apt-get install \
+        llvm-14 \
+        clang-14 \
+        clang-tools-14 \
+        lld-14 \
+        llvm \
+        clang \
+        clang-tools
+
+apt-get install \
+        libclang-dev \
+        libssl-dev \
+        llvm-dev \
+        libclang-14-dev
+        
+cargo install c2rust --git https://github.com/immunant/c2rust
+</code></pre>
+<p><a href="https://doc.riot-os.org/index.html#the-quickest-start">Building <code>RIOT</code></a> itself only requires a few build tools</p>
+<ul>
+<li><code>apt-get install gcc-arm-none-eabi make gcc-multilib libstdc++-arm-none-eabi-newlib openocd gdb-multiarch doxygen wget unzip python3-serial</code> (ubuntu:22.04)</li>
+</ul>
+<p>We then configure <code>rustup</code> to use the right toolchain:</p>
+<ul>
+<li><code>rustup target add thumbv7em-none-eabihf --toolchain stable</code></li>
+</ul>
+<p>clone <code>RIOT</code>:</p>
+<ul>
+<li><code>git clone https://github.com/RIOT-OS/RIOT</code></li>
+</ul>
+<p>copy our examples into the <code>examples</code> folder and build them:</p>
+<ul>
+<li><code>cd RIOT &amp;&amp; make BOARD=nrf52840dk -C examples/rust-nimble_advertiser</code></li>
+<li><code>cd RIOT &amp;&amp; make BOARD=nrf52840dk -C examples/rust-nimble_scanner</code></li>
+</ul>
+<p>The build artifacts we care about in the end are:</p>
+<ul>
+<li><code>RIOT/examples/rust-nimble_advertiser/bin/nrf52840dk/nimble_advertiser.elf</code> - The build advertiser</li>
+<li><code>RIOT/examples/rust-nimble_advertiser/bin/nrf52840dk/nimble_scanner.elf</code> - The build scanner</li>
+</ul>
+<h2 id="build-with-docker"><a class="header" href="#build-with-docker">Build with Docker</a></h2>
+<p>A <code>Dockerfile</code> is additionally provided that when run will build all these artifacts <a href="https://github.com/Pusty/AreWeIoTYet/tree/main/riot/output">here</a>.</p>
+<p>By running <code>docker build --output=output --target=binaries .</code> The docker image will be built and the output artifacts will be extracted and put into a folder called <code>output</code>.</p>
+<h2 id="run-on-device"><a class="header" href="#run-on-device">Run on Device</a></h2>
+<p>The <a href="https://doc.riot-os.org/flashing.html">recommended way</a> of flashing and interacting with the device is using <code>RIOT</code>'s build system:</p>
+<p><code>PROGRAMMER=jlink make BOARD=nrf52840dk -C examples/&lt;example&gt; flash </code>
+<code>PROGRAMMER=jlink make BOARD=nrf52840dk -C examples/&lt;example&gt; term</code></p>
+<p>This will directly rebuild and flash the examples to the device.</p>
+<h2 id="run-on-renode"><a class="header" href="#run-on-renode">Run on Renode</a></h2>
+<p>The build ELF files can directly be loaded into <code>renode</code>.</p>
+<p>The examples provide two <code>renode</code> scenarios to play around with: <code>riot_advertise</code> and <code>riot_demo</code>.</p>
+<h3 id="riot_advertise"><a class="header" href="#riot_advertise"><code>riot_advertise</code></a></h3>
+<p>Run with:</p>
+<ul>
+<li><code>renode -e "include @riot_advertise.resc;start"</code></li>
+</ul>
+<p>This starts the advertising example and Wireshark to capture the Bluetooth Low Energy Traffic:</p>
+<p><img src="riot/advertise.png" alt="" />
+<img src="riot/packet.png" alt="" /></p>
+<h3 id="riot_demo"><a class="header" href="#riot_demo"><code>riot_demo</code></a></h3>
+<p>Run with:</p>
+<ul>
+<li><code>renode -e "include @riot_demo.resc;start"</code></li>
+</ul>
+<p>This starts both the advertising and scanning examples.</p>
+<h3 id="notes-on-renode"><a class="header" href="#notes-on-renode">Notes on renode:</a></h3>
+<p>The wiki of RIOT has a <a href="https://doc.riot-os.org/emulators.html">small section</a> on how it already supports Renode as an emulator, but when trying to emulate device-specific functionality like BLE we still have a problem for the NRF boards.
+Specifically the way RIOT implemented UART for the nRF52840 by relying on the <code>Shortcut</code> functionality that is not implemented (as of yet) in Renode's nRF52840 UART driver.
+This means we need to load a patched <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/riot/NRF52840_UART_MODIFIED.cs"><code>NRF52840_UART_MODIFIED.cs</code></a> driver and use it instead.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tock"><a class="header" href="#tock">Tock</a></h1>
+<p>Tock is an embedded operating system written in Rust.
+It is designed to be able to run multiple concurrent, mutually distrustful applications on embedded platforms.
+For us most notably it explicitly supports the nRF52840 DK board and minimal BLE.</p>
+<h2 id="-bluetooth-status-1"><a class="header" href="#-bluetooth-status-1">[😐] Bluetooth Status</a></h2>
+<p>As of the writing of this, the <a href="https://github.com/tock/tock/blob/master/capsules/extra/src/ble_advertising_driver.rs">tock Bluetooth stack</a> only supports advertising and passive scanning.</p>
+<h2 id="-rust-status-1"><a class="header" href="#-rust-status-1">[🙂] Rust Status</a></h2>
+<p>Tock is written in Rust which makes it a very good candidate for developing code in Rust.
+But for user application code the <a href="https://github.com/tock/libtock-c/tree/master/examples">libtock C library</a> contains way more detailed examples than the <a href="https://github.com/tock/libtock-rs/tree/master/examples">libtock Rust library</a>.</p>
+<p>For BLE specifically there are only <a href="https://github.com/tock/libtock-c/tree/master/examples/ble_advertising"><code>ble_advertising</code></a> and <a href="https://github.com/tock/libtock-c/tree/master/examples/ble_passive_scanning"><code>ble_passive_scanning</code></a> examples written in C.
+We additionally provide Rust <a href="tock/examples.html#ble-advertising"><code>ble_advertising</code></a> and <a href="tock/examples.html#ble-scanning"><code>ble_scanning</code></a> examples, but notable in them is that to use the BLE features we had to directly use Tock's Syscall Interface as there are no wrappers provided for doing so.</p>
+<h2 id="-renode-status-1"><a class="header" href="#-renode-status-1">[😄] Renode Status</a></h2>
+<p>Tock works in Renode <a href="tock/build.html#notes-on-renode">with an adjusted CPU configuration</a> that accounts for some missing registers which otherwise cause a bootloop.</p>
+<p>Provided are <a href="tock/build.html#build-with-docker">Dockerfiles for building</a> the examples and directly <a href="tock/build.html#run-on-renode">running them in renode</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
+<p>The Tock C library provides a few Bluetooth Low Energy <a href="https://github.com/tock/libtock-c/blob/master/examples/">Examples</a> whereas the <a href="https://github.com/tock/libtock-rs/tree/master/examples">Rust Library</a> does not so we have translated two of these examples to Rust.
+One problem here is that the C library actually provides <a href="https://github.com/tock/libtock-c/blob/master/libtock/ble.c">proper support</a> for interacting with the BLE Advertising Driver but the Rust library (currently) doesn't.
+This means we had to <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/examples/ble.rs">port these parts</a> and have to interact directly through the abstraction of the syscall interface with the driver ourselves.</p>
+<h2 id="ble-advertising-1"><a class="header" href="#ble-advertising-1">BLE Advertising</a></h2>
+<p>The <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/examples/ble_advertising.rs">Rust BLE Advertising Example</a> is a rough translation of the <a href="https://github.com/tock/libtock-c/blob/master/examples/ble_advertising">C Advertising Example</a> and libtock-c library code.
+It sets the device up to send an advertisement of the device "TockOS" and some data packet every 300ms.</p>
+<p>This is how the UART Console looks in renode:</p>
+<p><img src="tock/advertise.png" alt="" /></p>
+<p>And this is how the advertisement packets that are sent are structured (they are sent on the three primary advertising channels 37, 38, and 39):</p>
+<p><img src="tock/packet.png" alt="" /></p>
+<h2 id="ble-scanning-1"><a class="header" href="#ble-scanning-1">BLE Scanning</a></h2>
+<p>The <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/examples/ble_scanning.rs">Rust BLE Scanning Example</a> is a rough translation of the <a href="https://github.com/tock/libtock-c/tree/master/examples/ble_passive_scanning">C Scanning Example</a> and libtock-c library code.
+It waits until it receives exactly one advertisement and prints it to the screen.</p>
+<p>When running the <a href="tock/build.html#tock_demo"><code>tock_demo</code></a> this is what the scanner receives:</p>
+<p><img src="tock/receive.png" alt="" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="build--run-instructions-1"><a class="header" href="#build--run-instructions-1">Build &amp; Run Instructions</a></h1>
+<p>When working with <a href="https://github.com/tock/libtock-rs"><code>libtock-rs</code></a> we are automatically also building <code>tock</code> itself.</p>
+<p>For building <code>libtock-rs</code> we first need <a href="https://rustup.rs/"><code>rustup</code></a>:</p>
+<ul>
+<li><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></li>
+</ul>
+<p>and a few other dependencies:</p>
+<ul>
+<li><code>apt-get install git python3 ninja-build pkg-config</code> (ubuntu:22.04)</li>
+</ul>
+<p>We then clone the <code>libtock-rs</code> repository recursively to also clone <code>tock</code>:</p>
+<ul>
+<li><code>git clone --recursive https://github.com/tock/libtock-rs</code></li>
+</ul>
+<p>and inside the <code>libtock-rs</code> repository we run the setup:</p>
+<ul>
+<li><code>make setup</code></li>
+</ul>
+<p>Note here that running <code>make setup</code> also builds a custom branch of <code>qemu</code> which requires some dependencies to be installed.</p>
+<ul>
+<li><code>apt-get install libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev libgtk-3-dev</code> (ubuntu:22.04)</li>
+</ul>
+<p>After that, our examples need to be copied into the <code>examples</code> folder and can be built with:</p>
+<ul>
+<li><code>make nrf52840 EXAMPLE=ble_advertising</code></li>
+<li><code>make nrf52840 EXAMPLE=ble_scanning</code></li>
+</ul>
+<p>As <code>tock</code> separates the kernel and modules, we also need to build the kernel separately:</p>
+<ul>
+<li><code>cd libtock-rs/tock/boards/nordic/nrf52840dk &amp;&amp; make all</code></li>
+</ul>
+<p>After this, we will have the following useful artifacts:</p>
+<ul>
+<li><code>libtock-rs/tock/target/thumbv7em-none-eabi/release/nrf52840dk.bin</code> - <code>tock</code> for the <code>nrf52840dk</code></li>
+<li><code>libtock-rs/target/thumbv7em-none-eabi/release/examples/ble_advertising.tab</code> - The Advertising Module</li>
+<li><code>libtock-rs/target/thumbv7em-none-eabi/release/examples/ble_scanning.tab</code> - The Scanning Module</li>
+<li><code>libtock-rs/target/thumbv7em-none-eabi/release/examples/ble_advertising.tbf</code> - The ELF file of the Advertising Module</li>
+<li><code>libtock-rs/target/thumbv7em-none-eabi/release/examples/ble_scanning.tbf</code> - The ELF file of the Scanning Module</li>
+</ul>
+<h2 id="build-with-docker-1"><a class="header" href="#build-with-docker-1">Build with Docker</a></h2>
+<p>A <code>Dockerfile</code> is additionally provided that when run will build all these artifacts <a href="https://github.com/Pusty/AreWeIoTYet/tree/main/tock/output">here</a>.</p>
+<p>By running <code>docker build --output=output --target=binaries .</code> The docker image will be built and the output artifacts will be extracted and put into a folder called <code>output</code>.
+Note here that the <code>ble_advertising.elf</code> / <code>ble_scanning.elf</code> are already merged with the kernel and can be directly used with <code>renode</code>.</p>
+<h2 id="run-on-device-1"><a class="header" href="#run-on-device-1">Run on Device</a></h2>
+<p>When wanting to run these examples on actual<code>nrf52840dk</code> boards we can follow the <a href="https://github.com/tock/tock/blob/master/doc/Getting_Started.md">guidelines</a> of tock and <a href="https://github.com/tock/libtock-rs">libtock-rs</a> which means to build the kernel with <code>make install</code> and the examples with <code>make flash-nrf52840 EXAMPLE=&lt;example&gt;</code> instead and have the board plugged in over USB.</p>
+<p>If we instead want to do this more manually after obtaining the artifacts as above or through <code>docker</code> we can instead install the kernel and examples with:</p>
+<ul>
+<li>
+<p><code>tockloader flash --address 0x0 --board nrf52840dk --jlink nrf52840dk.bin</code></p>
+</li>
+<li>
+<p><code>tockloader install --board nrf52840dk --jlink ble_advertising</code>
+or</p>
+</li>
+<li>
+<p><code>tockloader install --board nrf52840dk --jlink ble_scanning</code></p>
+</li>
+</ul>
+<p>This will install the <code>.tab</code> files with the respective names on a connected board with <code>tock</code> flashed on.
+Depending on how the board is connected and the operation system used some command line options <a href="https://github.com/tock/tockloader">might need to be changed</a>.
+Note that as of the writing of this, <code>tockloader</code> does not support Windows for flashing and installing <code>tock</code> and modules, see <a href="tock/../setup/hardware.html#working-in-wsl2">here</a> on how to use WSL2 for this instead.</p>
+<h2 id="run-on-renode-1"><a class="header" href="#run-on-renode-1">Run on Renode</a></h2>
+<p>To run the examples with <code>tock</code> in <code>renode</code> and preserve all our debug symbols we first need to merge the <code>tbf</code> files with the kernel:</p>
+<ul>
+<li><code>arm-none-eabi-objcopy --update-section .apps=ble_advertising.tbf nrf52840dk.elf ble_advertising.elf</code></li>
+<li><code>arm-none-eabi-objcopy --update-section .apps=ble_scanning.tbf nrf52840dk.elf ble_passive_scanning.elf</code></li>
+</ul>
+<p>The merged ELF files can then be directly loaded in <code>renode</code>.</p>
+<p>The examples provide two <code>renode</code> scenarios to play around with: <code>tock_advertise</code> and <code>tock_demo</code>.</p>
+<h3 id="tock_advertise"><a class="header" href="#tock_advertise"><code>tock_advertise</code></a></h3>
+<p>Run with:</p>
+<ul>
+<li><code>renode -e "include @tock_advertise.resc;start"</code></li>
+</ul>
+<p>This starts the advertising example and Wireshark to capture the Bluetooth Low Energy Traffic:</p>
+<p><img src="tock/advertise.png" alt="" />
+<img src="tock/packet.png" alt="" /></p>
+<h3 id="tock_demo"><a class="header" href="#tock_demo"><code>tock_demo</code></a></h3>
+<p>Run with:</p>
+<ul>
+<li><code>renode -e "include @tock_demo.resc;start"</code></li>
+</ul>
+<p>This starts both the advertising and scanning examples.</p>
+<h3 id="notes-on-renode-1"><a class="header" href="#notes-on-renode-1">Notes on renode:</a></h3>
+<p>The modified <a href="https://github.com/Pusty/AreWeIoTYet/blob/main/tock/nrf52840-tock.repl"><code>nrf52840-tock.repl</code></a> configuration is needed to run <code>tock</code> modules in <code>renode</code>.</p>
+<p>The most notable change is making the following areas of memory writable:</p>
+<pre><code>regout0: Memory.ArrayMemory @ sysbus 0x10001304
+    size: 4
+    
+pselreset: Memory.ArrayMemory @ sysbus 0x10001200
+    size: 8
+    
+nfcpin: Memory.ArrayMemory @ sysbus 0x1000120C
+    size: 4
+</code></pre>
+<p>This is because the startup of <code>tock</code> for the nrf boards <a href="https://github.com/tock/tock/blob/master/boards/nordic/nrf52_components/src/startup.rs#L41">requires configuring these registers</a>.
+If these registers are not writable then <code>renode</code> will be stuck in a reboot loop failing constantly to configure the device.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="embassy"><a class="header" href="#embassy">Embassy</a></h1>
+<h2 id="-bluetooth-status-2"><a class="header" href="#-bluetooth-status-2">[😄] Bluetooth Status</a></h2>
+<p>As Embassy is using Nordic Semiconductor's <a href="https://infocenter.nordicsemi.com/topic/struct_nrf52/struct/nrf52_softdevices.html">SoftDevice</a> which is Bluetooth 5.1 qualified, and very well tested. Probably all needed features will be available.</p>
+<h2 id="-rust-status-2"><a class="header" href="#-rust-status-2">[😄] Rust Status</a></h2>
+<p>Embassy is written in Rust, and all the examples are also written in Rust.
+A wide selection of <a href="https://github.com/embassy-rs/nrf-softdevice/tree/master/examples/src/bin">BLE examples</a> meant to be used with the SoftDevice is also directly available.</p>
+<h2 id="-renode-status-2"><a class="header" href="#-renode-status-2">[☹️] Renode Status</a></h2>
+<p>Embassy itself does boot in Renode but <a href="embassy/renode.html#general-problems">getting output and debug information</a> as Embassy intends is not supported.</p>
+<p>While it is possible to boot Embassy in Renode <a href="embassy/renode.html#booting-with-the-softdevice-solved">with the SoftDevice enabled</a>, we were not successful in getting Embassy on Renode to work with the Bluetooth features of the Softdevice.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examples-2"><a class="header" href="#examples-2">Examples</a></h1>
+<p>The nrf-softdevice repository includes multiple examples. Their source code can be found in <code>examples/src/bin</code>.</p>
+<h3 id="ble-advertise"><a class="header" href="#ble-advertise">BLE Advertise</a></h3>
+<p>This example spawns BLE advertises with the device name "HelloRust". If you want to modify the name, make sure to modify the hardcoded string in the <code>adv</code> object.</p>
+<h3 id="ble-bas-central"><a class="header" href="#ble-bas-central">BLE BaS Central</a></h3>
+<pre><code>cargo run --bin ble_bas_central
+</code></pre>
+<p>This example provides a <a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">GATT server</a> with a Battery Service. The central device can read and write the battery status.</p>
+<h3 id="ble-bas-peripheral"><a class="header" href="#ble-bas-peripheral">BLE BaS Peripheral</a></h3>
+<pre><code>cargo run --bin ble_bas_peripheral
+</code></pre>
+<p>This example provides a <a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">GATT server</a> with a Battery Service and a Foo Service. The peripheral device sends notifications on its battery status.</p>
+<h3 id="ble-bond-peripheral"><a class="header" href="#ble-bond-peripheral">BLE Bond Peripheral</a></h3>
+<pre><code>cargo run --bin ble_bond_peripheral
+</code></pre>
+<p>This example provides a <a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">GATT server</a> with a Battery Service. The more interesting part is the use of a bonder with its security handler. This leads to displaying a passkey on connection.</p>
+<h3 id="ble-dis-bas-peripheral-builder"><a class="header" href="#ble-dis-bas-peripheral-builder">BLE DIS BaS Peripheral Builder</a></h3>
+<pre><code>cargo run --bin ble_dis_bas_peripheral_builder
+</code></pre>
+<p>This example provides a <a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">GATT server</a> with a Device Information Service and a Battery Service.</p>
+<h3 id="ble-l2cap-central"><a class="header" href="#ble-l2cap-central">BLE L2CAP Central</a></h3>
+<pre><code>cargo run --bin ble_l2cap_central
+</code></pre>
+<p>This example uses the L2CAP on top of the BLE connection. This node is transmitting data.</p>
+<h3 id="ble-l2cap-peripheral"><a class="header" href="#ble-l2cap-peripheral">BLE L2CAP Peripheral</a></h3>
+<pre><code>cargo run --bin ble_l2cap_peripheral
+</code></pre>
+<p>This example uses the L2CAP on top of the BLE conection. This node is receiving data.</p>
+<h3 id="ble-peripheral-onoff"><a class="header" href="#ble-peripheral-onoff">BLE Peripheral onoff</a></h3>
+<pre><code>cargo run --bin ble_peripheral_onoff
+</code></pre>
+<p>This example makes use of the buttons on the board. Press button 1 to enable BLE or press button 2 to disable BLE. On connection the device creates a <a href="https://learn.adafruit.com/introduction-to-bluetooth-low-energy/gatt">GATT server</a> with a Foo Service.</p>
+<h3 id="ble-scan"><a class="header" href="#ble-scan">BLE Scan</a></h3>
+<pre><code>cargo run --bin ble_scan
+</code></pre>
+<p>This example scans for BLE devices. It reports the type or the discovered devices as info text.</p>
+<h3 id="flash"><a class="header" href="#flash">Flash</a></h3>
+<pre><code>cargo run --bin flash
+</code></pre>
+<p>This example erases the application from the board but should leave the softdevice on it.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="build--run-instruction-for-board"><a class="header" href="#build--run-instruction-for-board">Build &amp; Run Instruction for Board</a></h1>
+<h3 id="prerequistits"><a class="header" href="#prerequistits">Prerequistits</a></h3>
+<p>For Ubuntu 22.04 make sure that the following are installed:</p>
+<ol>
+<li>pkg-config</li>
+<li>libudev-dev</li>
+<li>probe-run</li>
+<li>probe-rs-cli</li>
+</ol>
+<p>If they are not yet installed, do:</p>
+<ul>
+<li><code>apt-get install libudev-dev probe-run probe-rs-cli</code> (Ubuntu 22.04)</li>
+</ul>
+<h2 id="embassy-without-softdevice"><a class="header" href="#embassy-without-softdevice">Embassy without Softdevice</a></h2>
+<h3 id="install-embassy"><a class="header" href="#install-embassy">Install Embassy</a></h3>
+<p>This setup is not able to use BLE and only includes the operating system. The embassy team provides build and run instructions in <a href="https://github.com/embassy-rs/embassy">their repository</a>.</p>
+<ul>
+<li>Clone Embassy:<br />
+<code>git clone https://github.com/embassy-rs/embassy.git</code></li>
+<li>Update Submodules:<br />
+<code>git fetch</code></li>
+</ul>
+<p>Run Embassy example</p>
+<ul>
+<li>Change directory to the cloned embassy directory</li>
+<li>Then change to the examples folder of the board:<br />
+<code>cd examples/nrf52840</code></li>
+<li>Connect the board</li>
+<li>Clear the board:<br />
+<code>probe-rs-cli erase --chip nrf52840</code></li>
+<li>Use <code>cargo run</code> to build and run the example on the board. For the blinky example, do:<br />
+<code>cargo run --bin blinky --release</code></li>
+</ul>
+<p>Now the example should perform as expected. For the blinky example this is a blinking LED 1. Other examples are described in the <a href="embassy/examples.html">next subchapter</a>.</p>
+<h2 id="combining-embassy-with-softdevice"><a class="header" href="#combining-embassy-with-softdevice">Combining Embassy with Softdevice</a></h2>
+<p>The instructions are described in the <a href="https://github.com/embassy-rs/nrf-softdevice">embassy-rs/nrf-softdevice repoository</a>. Below you can find a similar instruction.</p>
+<p>Get the SoftDevice and the embassy version that is capable of using it:</p>
+<ul>
+<li>Clone the nrf-softdevice repository:</li>
+<li>Download a fitting SoftDevice from Nodics Webpage. I used S140, version 7.3.0</li>
+<li>Unzip the SoftDevice archive into the examples folder of the nrf-softdevice repository</li>
+</ul>
+<p>After that prepare rust and the board:</p>
+<ul>
+<li>Run:<br />
+<code>rustup update</code></li>
+<li>Clear the board:<br />
+<code>probe-rs-cli erase --chip nrf52840</code></li>
+</ul>
+<p>Now flash the SoftDevice to the board:</p>
+<ul>
+<li>Flash the SoftDevice to the board:<br />
+<code>probe-rs-cli download --chip nrf52840 --format hex s140_nrf52_7.3.0_softdevice.hex</code></li>
+<li>If necessary edit the RAM in Cargo.toml according to <a href="https://github.com/embassy-rs/nrf-softdevice">https://github.com/embassy-rs/nrf-softdevice</a>, section "Configuring a SoftDevice"</li>
+</ul>
+<p>Run an embassy-softdevice example:</p>
+<ul>
+<li>To run the embassy BLE BatteryService Peripheral, do:<br />
+<code>cd examples &amp;&amp; cargo run --bin ble_bas_peripheral</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="remarks-regarding-renode"><a class="header" href="#remarks-regarding-renode">Remarks regarding Renode</a></h1>
+<p>We were not able to get Embassy BLE functionality to work on Renode.</p>
+<p>For documentation purposes, we list the following problems for getting Embassy to work on Renode:</p>
+<p>Solved Problems:</p>
+<ul>
+<li>Configuring MBR to boot correctly <a href="embassy/renode.html#booting-with-the-softdevice-solved">[1]</a></li>
+<li>Sending advertisement packets once <a href="embassy/renode.html#sending-an-advertisement-once">[2]</a></li>
+</ul>
+<p>Known Open Problems:</p>
+<ul>
+<li>Temperature Sensor Peripheral needed <a href="embassy/renode.html#using-bluetooth-with-the-softdevice">[3]</a></li>
+<li>Decoding of <a href="https://github.com/knurling-rs/defmt">defmt</a> over RTT needed <a href="embassy/renode.html#general-problems">[4]</a></li>
+</ul>
+<p>Unknown Open Problems:</p>
+<ul>
+<li>The program waits forever after sending an advertisement once <a href="embassy/renode.html#sending-an-advertisement-once">[2]</a></li>
+</ul>
+<p>The following subsections go into the details of these.</p>
+<h2 id="booting-with-the-softdevice-solved"><a class="header" href="#booting-with-the-softdevice-solved">Booting with the SoftDevice [Solved]</a></h2>
+<p>Embassy on ony nRF52 chip (so including the nRF52840) is using Nordic Semiconductor's closed source <a href="https://infocenter.nordicsemi.com/topic/struct_nrf52/struct/nrf52_softdevices.html">SoftDevice</a> for some features but most importantly Bluetooth.</p>
+<p>The first hurdle when building Embassy with the SoftDevice normally is how to configure and combine those two generally, as a lot of it depends on the exact version and configuration you are going to use.</p>
+<p>When downloading the SoftDevice we get a <code>.hex</code> file in the Intel HEX format, so as a preparation, we convert that to a flat binary file:</p>
+<pre><code>objcopy --input-target=ihex --output-target=binary s140_nrf52_7.3.0_softdevice.hex s140_softdevice.bin
+</code></pre>
+<p>Generally speaking, what should work is loading the binary and <a href="https://infocenter.nordicsemi.com/index.jsp?topic=%2Fcomp_matrix_nrf52840%2FCOMP%2Fnrf52840%2Fnrf52840_comp_matrix.html">matching SoftDevice</a> like this:</p>
+<pre><code>sysbus LoadELF $binary
+sysbus LoadBinary $softdevice 0x00
+</code></pre>
+<p>But when you load them like this, Renode assumes the VectorTableOffset (which is where the <a href="https://developer.arm.com/documentation/dui0662/b/The-Cortex-M0--Processor/Exception-model/Vector-table">Vector Table</a> is positioned) is in the ELF file / in the binary.
+This boots up correctly but the SoftDevice is not initialized, so the program operates like no SoftDevice is loaded.</p>
+<p>To fix this we tell Renode that we want the Vector Table of the SoftDevice to be loaded:</p>
+<pre><code>cpu VectorTableOffset 0
+</code></pre>
+<p>But for some reason, this already causes a boot loop and our program to never load.</p>
+<p>To cite the API docs included with the SoftDevice:</p>
+<pre><code> * The MBR assumes that either @ref MBR_BOOTLOADER_ADDR or @ref MBR_UICR_BOOTLOADER_ADDR is set to
+ * the address where the bootloader will be copied. If both addresses are set, the MBR will prioritize
+ * @ref MBR_BOOTLOADER_ADDR.
+</code></pre>
+<p>For the SoftDevice 140 NRF52 7.3.0 these are defined as:</p>
+<pre><code>/** @brief Location (in the flash memory) of the bootloader address. */
+#define MBR_BOOTLOADER_ADDR      (0xFF8)
+
+/** @brief Location (in UICR) of the bootloader address. */
+#define MBR_UICR_BOOTLOADER_ADDR (&amp;(NRF_UICR-&gt;NRFFW[0]))
+</code></pre>
+<p>By default <code>MBR_BOOTLOADER_ADDR</code> seems to be set to <code>0</code>, so after that the bootloader tries <code>MBR_UICR_BOOTLOADER_ADDR</code> which in our setting is also by default <code>0</code>, which causes the boot loop.</p>
+<p>The actual SoftDevice starts directly after the MBR, which seems to be at address <code>0x1000</code> (given we load it at <code>0x0000</code>):</p>
+<pre><code>/** @brief The size that must be reserved for the MBR when a SoftDevice is written to flash.
+This is the offset where the first byte of the SoftDevice hex file is written. */
+#define MBR_SIZE                (0x1000)
+</code></pre>
+<p>So by either setting <code>MBR_UICR_BOOTLOADER_ADDR</code> to <code>0x1000</code> or patching the SoftDevice binary at address <code>MBR_BOOTLOADER_ADDR</code> to be <code>0x1000</code> we can get the SoftDevice to boot up correctly.</p>
+<h2 id="using-bluetooth-with-the-softdevice"><a class="header" href="#using-bluetooth-with-the-softdevice">Using Bluetooth with the SoftDevice</a></h2>
+<p>Enabling Bluetooth functionality with the SoftDevice requires a temperature sensor peripheral, which is not implemented in Renode.</p>
+<p>From the API documentation, this seems to be the case because of some problems with rssi sampling ( <a href="https://infocenter.nordicsemi.com/index.jsp?topic=%2Ferrata_nRF52840_EngC%2FERR%2FnRF52840%2FEngineeringC%2Flatest%2Fanomaly_840_153.html">153</a> , <a href="https://infocenter.nordicsemi.com/index.jsp?topic=%2Ferrata_nRF52833_Rev2%2FERR%2FnRF52833%2FRev2%2Flatest%2Fanomaly_833_225.html">225</a> ):</p>
+<pre><code>ERRATA-153 and ERRATA-225 require the rssi sample to be compensated based on a temperature measurement.
+</code></pre>
+<p>By providing dummy sensor values we were able to get further into the Bluetooth Stack and make the examples send a single burst of advertisements.
+After that, the program seemed to get stuck in the <code>embassy_executor::arch::thread::Executor::run</code> at a <a href="https://developer.arm.com/documentation/dui0473/m/arm-and-thumb-instructions/wfe"><code>wfe</code></a> instruction seemingly waiting for a timer interrupt that never happens.</p>
+<p>We were not able to further figure out where the exact problem lies.</p>
+<h2 id="general-problems"><a class="header" href="#general-problems">General Problems</a></h2>
+<p>A general problem with combining Embassy and Renode is the method Embassy uses for debug output.
+Compared to other frameworks that treat serial output as the standard way of communication, Embassy treats serial like any other peripheral and has no shortcuts for using it.
+This is rather good when working with the SoftDevice that has some caveats with regards to Interrupt priority and how Interrupts can be used after the SoftDevice has been initialized.</p>
+<p>Even better Embassy on the NRF makes use of <a href="https://wiki.segger.com/RTT">SEGGER's Real Time Transfer technology</a> through the programmer on the board to deliver general and debug information or even warnings and crashes.
+The message transfer happens using the <a href="https://github.com/knurling-rs/defmt">defmt</a> library which encodes the information efficiently so e.g. fixed strings can be referenced by index instead of being repeatedly sent over the wire.</p>
+<p>With Renode the problem is that that RTT as a communication method is not implemented and for the output to be actually useful decoding for <code>defmt</code> needs to be implemented additionally.</p>
+<p>Without this working with Embassy and debugging it is extremely difficult given you are basically working blind and even the <a href="https://github.com/embassy-rs/nrf-softdevice/tree/master">Embassy NRF-Softdevice</a> itself assumes you have this output for configuring the memory for the SoftDevice.</p>
+<h2 id="sending-an-advertisement-once"><a class="header" href="#sending-an-advertisement-once">Sending an Advertisement Once</a></h2>
+<p>We are able to get the <a href="https://github.com/embassy-rs/nrf-softdevice/blob/master/examples/src/bin/ble_advertise.rs">advertiser example</a> running in Renode but after sending the following packets it freezes in the before mentioned <code>embassy_executor::arch::thread::Executor::run</code> function.</p>
+<p><img src="embassy/bleonce.png" alt="" /></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="drogue-iot"><a class="header" href="#drogue-iot">Drogue IoT</a></h1>
+<h2 id="-bluetooth-status-3"><a class="header" href="#-bluetooth-status-3">[😄] Bluetooth Status</a></h2>
+<p>Drogue builds on embassy which is using  Nordic Semiconductor's <a href="https://infocenter.nordicsemi.com/topic/struct_nrf52/struct/nrf52_softdevices.html">SoftDevice</a>. The SoftDevice is Bluetooth 5.1 qualified, and very well tested probably all needed features will be available.</p>
+<h2 id="-rust-status-3"><a class="header" href="#-rust-status-3">[😄] Rust Status</a></h2>
+<p>Drogue and Embassy are written in Rust, and all the examples are also written in Rust.
+There is exactly one <a href="https://book.drogue.io/drogue-device/dev/examples.html">BLE example</a> for the nRF 52840 DK board but there are also three further examples for other boards.</p>
+<h2 id="-renode-status-3"><a class="header" href="#-renode-status-3">[☹️] Renode Status</a></h2>
+<p>As Drogue builds on top of Embassy, this status is as bad as it is for Embassy.</p>
+<p>Embassy itself does boot in Renode but <a href="drogueiot/renode.html#general-problems">getting output and debug information</a> as Embassy intends is not supported.
+It is also possible to boot Embassy in Renode <a href="drogueiot/renode.html#booting-with-the-softdevice-solved">with the SoftDevice enabled</a>.</p>
+<p>We were not successful in getting Embassy on Renode to stably work with the Bluetooth features of the Softdevice.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>For Ubuntu 22.04 make sure that the following are installed:</p>
+<ul>
+<li>pkg-config</li>
+<li>libudev-dev</li>
+<li>probe-run</li>
+<li>probe-rs-cli</li>
+<li>bluez</li>
+<li>bluez-meshd</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="examples-3"><a class="header" href="#examples-3">Examples</a></h1>
+<p>There is exactly one example for the nRf52840 dk board in Drogue: A <a href="https://book.drogue.io/drogue-device/dev/examples/nrf52/nrf52840-dk/bt-mesh/README.html">Bluetooth Mesh example</a></p>
+<h2 id="setup-drogue-iot--drogue-device"><a class="header" href="#setup-drogue-iot--drogue-device">Setup Drogue-IoT / Drogue-Device</a></h2>
+<p>It is necessary to open multiple terminal windows to setup and run the example.</p>
+<h2 id="setup-the-example"><a class="header" href="#setup-the-example">Setup the Example</a></h2>
+<p>Clone the drogue github repository and change to its directory:</p>
+<pre><code>git clone https://github.com/drogue-iot/drogue-device.git  
+cd drogue-device
+</code></pre>
+<p>To later be able to stop the bluetooth mesh process, do now:</p>
+<pre><code>sudo service bluetooth stop  
+sudo /usr/lib/bluetooth/bluetooth-meshd -nd --debug
+</code></pre>
+<p>Next, we need a new terminal window as this one will stay busy. There we start the mesh network:</p>
+<pre><code>mesh-cfgclient
+</code></pre>
+<p>In case an error occurs about not finding the <code>config_db.json</code>, run:</p>
+<pre><code>[mesh-cfgclient]# create
+</code></pre>
+<p>Now we created the mesh network to which we want to add the node running the drogue example.</p>
+<p>In another new terminal window, change directory to the bluetooth mesh example:</p>
+<pre><code>cd &lt;drogue-device-git&gt;/examples/nrf52/nrf52840-dk/bt-mesh
+</code></pre>
+<p>To run the example without seeing the debug messages, do:</p>
+<pre><code>cargo run --release
+</code></pre>
+<p>The output should be: <code>(HOST) INFO success!</code></p>
+<h3 id="usb-permissions"><a class="header" href="#usb-permissions">USB Permissions</a></h3>
+<p>This might run into an error:</p>
+<pre><code>USB error while opening USB device: Access denied (insufficient permissions)
+</code></pre>
+<p>To read the USB permissions on Ubuntu 22.04 for the board, do:</p>
+<pre><code>lsusb  
+</code></pre>
+<p>This will output an id for the connected board which we will use in the next step:</p>
+<pre><code>lsusb -d &lt;id for the board&gt;
+</code></pre>
+<p>You will get the bus number and the device number here. To now read the permissions for the board using the acquired numbers, do:</p>
+<pre><code>ls -l /dev/bus/usb/&lt;bus-nr&gt;/&lt;device-nr&gt;
+</code></pre>
+<p>The output should look like: <code>crw-rw-r-- 1 root root 189, 8 Jul 18 06:48</code></p>
+<p>Now, to modify the USB permissions open the file <code>/etc/udev/rules.d/50-oxidize-global.rules</code> and add the board:</p>
+<pre><code># udev rules to allow access to USB devices as a non-root user
+
+# nRF52840 Dongle in bootloader mode
+ATTRS{idVendor}=="1915", ATTRS{idProduct}=="521f", TAG+="uaccess"
+
+# nRF52840 Dongle applications
+ATTRS{idVendor}=="2020", TAG+="uaccess"
+
+# nRF52840 Development Kit
+ATTRS{idVendor}=="1366", ENV{ID_MM_DEVICE_IGNORE}="1", TAG+="uaccess"
+</code></pre>
+<p>Then reload the permission rules:</p>
+<pre><code>sudo udevadm control --reload-rules
+</code></pre>
+<p>It might be interesting to read the permissions again at this time. This is then done by repeating the first steps. The output should be changed from:
+<code>crw-rw-w-- 1</code> to <code>crw-rw-r--+ 1</code>.<br />
+Now, retry to run the example on the board:</p>
+<pre><code>cargo run --release
+</code></pre>
+<h2 id="run-the-example"><a class="header" href="#run-the-example">Run the Example</a></h2>
+<p>Go back to the terminal window running the mesh configuration client and do:</p>
+<pre><code>[mesh-cfgclient]# discover-unprovisioned on
+</code></pre>
+<p>This will scan for new devices and will generate output similar to:</p>
+<pre><code>    Scan result:
+    rssi = -36
+    UUID = SOMEINCREDIBLYLARGEHEXID
+    OOB = A040
+</code></pre>
+<p>To end the scanning and bind the discovered node to the mesh network, do:</p>
+<pre><code>[mesh-cfgclient]# discover unprovisioned off
+[mesh-cfgclient]# provision SOMEINCREDIBLYLARGEHEXID
+</code></pre>
+<p>Which then generates the output:</p>
+<pre><code>    Provisioning started
+    Assigning address for 1 elements
+    Provisioning done:
+    Mesh node:
+    UUID = SOMEINCREDIBLYLARGEHEXID
+    primary = 00aa
+
+    elements(1): 
+</code></pre>
+<p>You can now play with the given example or simply exit and end the client.</p>
+<h3 id="remarks"><a class="header" href="#remarks">Remarks</a></h3>
+<p>I didn't erase the board before staring the setup, so the nrf-softdevice already was on the chip.</p>
+<h4 id="sources-for-droguedevice"><a class="header" href="#sources-for-droguedevice">Sources for Drogue.Device:</a></h4>
+<p>https://book.drogue.io/drogue-device/dev/getting_started.html<br />
+https://github.com/drogue-iot/drogue-device/tree/main/examples/nrf52/nrf52840-dk/bt-mesh<br />
+https://book.drogue.io/drogue-device/dev/examples/nrf52/nrf52840-dk/bt-mesh/README.html<br />
+https://embedded-trainings.ferrous-systems.com/troubleshoot-cargo-flash.html</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="zephyr"><a class="header" href="#zephyr">Zephyr</a></h1>
+<p>Zephyr is a small real-time operating system for connected, resource-constrained and embedded devices written in C.
+For us the most interesting parts are the <a href="https://docs.zephyrproject.org/latest/boards/arm/nrf52840dk_nrf52840/doc/index.html"><code>nrf52840dk</code></a> and <a href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/bluetooth-arch.html">BLE support</a> in the context of <a href="https://github.com/tylerwhall/zephyr-rust">Rust</a>.</p>
+<h2 id="-bluetooth-status-4"><a class="header" href="#-bluetooth-status-4">[😄] Bluetooth Status</a></h2>
+<p><a href="https://docs.zephyrproject.org/latest/connectivity/bluetooth/overview.html">Zephyr's Bluetooth Stack</a> is highly configurable and Bluetooth v5.3 compliant.
+Support for all combinations of Host and Controllers is provided and the stack generally is Bluetooth-SIG qualified.</p>
+<h2 id="-rust-status-4"><a class="header" href="#-rust-status-4">[☹️] Rust Status</a></h2>
+<p>There is no official Rust support for Zephyr.</p>
+<p>We in particular looked at <a href="https://github.com/tylerwhall/zephyr-rust">tylerwhall/zephyr-rust</a> which makes it possible to write Rust code for Zephyr but lacks any support for Bluetooth features.</p>
+<h2 id="-renode-status-4"><a class="header" href="#-renode-status-4">[😄] Renode Status</a></h2>
+<p>The <a href="https://renode.readthedocs.io/en/latest/tutorials/ble-simulation.html">main demonstrations</a> of Renode's BLE capabilities is done on Zephyrs BLE examples and <a href="https://zephyrproject.org/developing-and-testing-bluetooth-low-energy-products-on-nrf52840-in-renode-and-zephyr/">documented here</a>.
+This is for C code though. As at the time of writing there are no Rust bindings for the Bluetooth stack we can not evaluate the Rust side of this too deeply.</p>
+<p>Our experiments with <a href="https://github.com/tylerwhall/zephyr-rust">tylerwhall/zephyr-rust</a> showed that it works on their example projects and building them for the <code>nrf52840dk_nrf52840</code>.</p>
+<p><img src="zephyr/sample.png" alt="" /></p>
+<p>The crash is according to their README intended. For the serial output to show in Renode the <code>repl</code> for the <a href="https://github.com/renode/renode/blob/master/platforms/cpus/nrf52840.repl"><code>nrf52840</code></a> needs to be modified so that easyDMA is off for the UART ports:</p>
+<pre><code>uart0: UART.NRF52840_UART @ sysbus 0x40002000
+    easyDMA: false
+    -&gt; nvic@2
+
+uart1: UART.NRF52840_UART @ sysbus 0x40028000
+    easyDMA: false
+    -&gt; nvic@40
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="other-considered-operation-systems"><a class="header" href="#other-considered-operation-systems">Other Considered Operation Systems</a></h1>
+<h2 id="freertos"><a class="header" href="#freertos">FreeRTOS</a></h2>
+<p>No official Rust support, neither <a href="https://github.com/lobaro/FreeRTOS-rust">FreeRTOS-rust</a> or <a href="https://github.com/hashmismatch/freertos.rs">freertos.rs</a> looked like they are in active development.</p>
+<h2 id="apache-mynewt"><a class="header" href="#apache-mynewt">Apache Mynewt</a></h2>
+<p>While there is a <a href="https://mynewt.apache.org/latest/tutorials/other/rust.html">Rust tutorial</a> there doesn't seem too much information on official bindings and using Rust otherwise.</p>
+<h2 id="other--rumble"><a class="header" href="#other--rumble">Other + Rumble</a></h2>
+<p>We also looked at using (Rust) RTOS without their own BLE stacks in combination with <a href="https://github.com/mwylde/rumble">Rumble</a> but that project also does not look like it is in active development.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
